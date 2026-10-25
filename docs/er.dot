@@ -1,0 +1,116 @@
+digraph ER {
+  graph [rankdir=LR, splines=true, nodesep=0.55, ranksep=1.1, fontname="Helvetica", bgcolor="white", pad=0.4];
+  node  [shape=plain, fontname="Helvetica", fontsize=11];
+  edge  [fontname="Helvetica", fontsize=10, color="#14211C", arrowsize=0.9, dir=both, arrowtail=tee, arrowhead=crow];
+
+  users [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#14211C">
+      <TR><TD BGCOLOR="#0B5D4B" COLSPAN="2"><FONT COLOR="white"><B>users</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B></TD><TD ALIGN="LEFT">id</TD></TR>
+      <TR><TD ALIGN="LEFT">UQ</TD><TD ALIGN="LEFT">usuario</TD></TR>
+      <TR><TD ALIGN="LEFT">UQ</TD><TD ALIGN="LEFT">email</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">password</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">rol (admin|empresa|cliente)</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">remember_token</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">created_at / updated_at</TD></TR>
+    </TABLE>>];
+
+  password_reset_tokens [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#14211C">
+      <TR><TD BGCOLOR="#6B7A72" COLSPAN="2"><FONT COLOR="white"><B>password_reset_tokens</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B></TD><TD ALIGN="LEFT">email</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">token</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">created_at</TD></TR>
+    </TABLE>>];
+
+  administradores [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#14211C">
+      <TR><TD BGCOLOR="#0B5D4B" COLSPAN="2"><FONT COLOR="white"><B>administradores</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B></TD><TD ALIGN="LEFT">id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK, UQ</TD><TD ALIGN="LEFT">user_id</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">nombre_completo</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">created_at / updated_at</TD></TR>
+    </TABLE>>];
+
+  empresas [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#14211C">
+      <TR><TD BGCOLOR="#0B5D4B" COLSPAN="2"><FONT COLOR="white"><B>empresas</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B></TD><TD ALIGN="LEFT">id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK, UQ</TD><TD ALIGN="LEFT">user_id</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">nombre</TD></TR>
+      <TR><TD ALIGN="LEFT">UQ</TD><TD ALIGN="LEFT">nit</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">direccion</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">telefono</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">estado (pendiente|aprobada|rechazada)</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">comision</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">motivo_rechazo</TD></TR>
+      <TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">resuelta_por</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">fecha_resolucion</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">created_at / updated_at</TD></TR>
+    </TABLE>>];
+
+  clientes [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#14211C">
+      <TR><TD BGCOLOR="#0B5D4B" COLSPAN="2"><FONT COLOR="white"><B>clientes</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B></TD><TD ALIGN="LEFT">id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK, UQ</TD><TD ALIGN="LEFT">user_id</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">nombre</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">apellidos</TD></TR>
+      <TR><TD ALIGN="LEFT">UQ</TD><TD ALIGN="LEFT">dui</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">fecha_nacimiento</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">created_at / updated_at</TD></TR>
+    </TABLE>>];
+
+  ofertas [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#14211C">
+      <TR><TD BGCOLOR="#0B5D4B" COLSPAN="2"><FONT COLOR="white"><B>ofertas</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B></TD><TD ALIGN="LEFT">id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">empresa_id</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">titulo</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">precio_regular</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">precio_oferta</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">fecha_inicio</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">fecha_fin</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">fecha_limite_canje</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">cantidad_cupones (nullable)</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">descripcion</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">estado (disponible|no_disponible)</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">created_at / updated_at</TD></TR>
+    </TABLE>>];
+
+  compras [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#14211C">
+      <TR><TD BGCOLOR="#0B5D4B" COLSPAN="2"><FONT COLOR="white"><B>compras</B> (facturas)</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B></TD><TD ALIGN="LEFT">id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">cliente_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">oferta_id</TD></TR>
+      <TR><TD ALIGN="LEFT">UQ</TD><TD ALIGN="LEFT">numero_factura</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">cantidad (1 a 5)</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">precio_unitario</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">total</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">tarjeta_ultimos4</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">created_at / updated_at</TD></TR>
+    </TABLE>>];
+
+  cupones [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#14211C">
+      <TR><TD BGCOLOR="#0B5D4B" COLSPAN="2"><FONT COLOR="white"><B>cupones</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B></TD><TD ALIGN="LEFT">id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">compra_id</TD></TR>
+      <TR><TD ALIGN="LEFT">UQ</TD><TD ALIGN="LEFT">codigo</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">estado (disponible|canjeado|vencido)</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">fecha_canje</TD></TR>
+      <TR><TD ALIGN="LEFT"></TD><TD ALIGN="LEFT">created_at / updated_at</TD></TR>
+    </TABLE>>];
+
+  // Relaciones (tee = "uno", crow = "muchos"; la línea punteada es una referencia lógica)
+  users -> administradores [label="  1 : 0..1", arrowhead=tee];
+  users -> empresas        [label="  1 : 0..1", arrowhead=tee];
+  users -> clientes        [label="  1 : 0..1", arrowhead=tee];
+  users -> empresas        [label="  resuelve (1 : N)", style=dashed, constraint=false];
+  empresas -> ofertas      [label="  publica (1 : N)"];
+  clientes -> compras      [label="  realiza (1 : N)"];
+  ofertas  -> compras      [label="  se vende en (1 : N)"];
+  compras  -> cupones      [label="  genera (1 : N)"];
+  users -> password_reset_tokens [label="  email (referencia lógica)", style=dotted, arrowhead=none, arrowtail=none];
+}
