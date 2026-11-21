@@ -9,8 +9,12 @@ class DashboardController extends Controller
 {
     public function __invoke(Request $request)
     {
+        $cliente = $request->user()->cliente;
+
         return view('cliente.dashboard', [
-            'cliente' => $request->user()->cliente,
+            'cliente' => $cliente,
+            'totalCompras' => $cliente->compras()->count(),
+            'totalCupones' => (int) $cliente->compras()->sum('cantidad'),
         ]);
     }
 }

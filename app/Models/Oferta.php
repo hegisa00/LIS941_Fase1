@@ -51,6 +51,30 @@ class Oferta extends Model
             ->whereHas('empresa', fn (Builder $empresa) => $empresa->where('estado', Empresa::APROBADA));
     }
 
+    /** Máximo de cupones de una misma oferta que puede comprar un cliente. */
+    public const MAX_POR_CLIENTE = 5;
+
+    /** Cupones vendidos. Usa el atributo "vendidos" si la consulta lo trajo (withSum) para evitar N+1. */
+    public function cuponesVendidos(): int
+    {
+        return (int) ($this->vendidos ?? $this->compras()->sum('cantidad'));
+    }
+
+    /** Cupones que aún se pueden vender; null significa sin límite. */
+    public function cuponesRestantes(): ?int
+    {
+        if ($this->cantidad_cupones === null) {
+            return null;
+        }
+
+        return max(0, $this->cantidad_cupones - $this->cuponesVendidos());
+    }
+
+    public function agotada(): bool
+    {
+        return $this->cuponesRestantes() === 0;
+    }
+
     public function porcentajeDescuento(): int
     {
         if ((float) $this->precio_regular <= 0) {

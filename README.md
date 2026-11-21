@@ -1,58 +1,72 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# La Cuponera SV
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Institución:** _(completar)_ · **Materia:** Lenguajes Interpretados en el Servidor (LIS941) · **Proyecto de cátedra, Fase 2 (entrega final)**
+**Grupo 4** — Integrantes: _(completar nombres y carnets)_
 
-## About Laravel
+Aplicación web en **Laravel 13 / PHP 8.3 + MySQL** para la venta de cupones de descuento.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Funcionalidad
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Rol | Qué puede hacer |
+| --- | --- |
+| Visitante | Ver los cupones disponibles, registrarse como cliente o como empresa. |
+| Cliente | Comprar de 1 a 5 cupones por oferta (pago simulado con tarjeta), ver su factura con un código único por cupón e historial de compras. Debe ser mayor de 18 años para registrarse. |
+| Empresa | Registrarse (queda pendiente), y una vez aprobada, publicar y editar ofertas. |
+| Administrador | Aprobar/rechazar empresas fijando su comisión, registrar otros administradores y ver reportes de cupones vendidos, ventas y ganancias por empresa. |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Seguridad: las rutas están protegidas por rol (`RoleMiddleware`); una empresa solo accede a sus propias ofertas, un cliente solo a sus propias facturas, y las empresas no aprobadas no pueden publicar. Los datos de la tarjeta nunca se guardan (solo los últimos 4 dígitos).
 
-## Learning Laravel
+## Requisitos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+PHP 8.3+ (con extensiones `pdo_mysql`, `mbstring`, `openssl`), Composer, MySQL/MariaDB (por ejemplo XAMPP).
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalación y ejecución
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+copy .env.example .env        # (cp en Linux/Mac)
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Crea la base de datos y cárgala con **una** de estas dos opciones:
 
-## Contributing
+1. **Con migraciones (recomendado):** crea una base vacía `cuponera_sv` y ejecuta
+   ```bash
+   php artisan migrate --seed
+   ```
+2. **Con el script SQL:** importa `cuponera_sv.sql` en MySQL (phpMyAdmin → Importar).
+   Incluye el esquema y los usuarios de prueba. Las ofertas de ejemplo quedan vigentes desde el día de la
+   importación (fechas relativas a `CURDATE()`).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Ajusta `DB_*` en `.env` si tu MySQL tiene otra contraseña. Luego:
 
-## Code of Conduct
+```bash
+php artisan serve
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Abre <http://localhost:8000>.
 
-## Security Vulnerabilities
+## Usuarios de prueba (seeder)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Rol | Usuario | Contraseña | Entrada |
+| --- | --- | --- | --- |
+| Administrador | `admin` | `Admin1234` | `/admin/login` |
+| Cliente | `cliente_demo` | `Demo1234` | `/login` |
+| Empresa aprobada | `pupuseria_marta` | `Demo1234` | `/empresa/login` |
+| Empresa pendiente | `tecnoplaza` | `Demo1234` | `/empresa/login` |
 
-## License
+Tarjeta de prueba: cualquier número de 16 dígitos, vencimiento futuro (p. ej. `12/30`) y CVV de 3 dígitos.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Rutas principales
+
+| Ruta | Rol |
+| --- | --- |
+| `/` | público (catálogo) |
+| `/registro`, `/empresa/registro` | público |
+| `/cupones/{id}/comprar`, `/mis-cupones`, `/facturas/{id}` | cliente |
+| `/empresa/ofertas` (+ `/crear`, `/{id}/editar`) | empresa aprobada |
+| `/admin/empresas`, `/admin/reportes`, `/admin/administradores` | administrador |
+
+## Documentación
+
+Modelo relacional y descripción de tablas: [`docs/DESCRIPCION_TABLAS.md`](docs/DESCRIPCION_TABLAS.md).

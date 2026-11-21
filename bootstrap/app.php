@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Nunca devolver al formulario (ni guardar en sesión) los datos de la tarjeta.
+        $exceptions->dontFlash(['numero_tarjeta', 'cvv', 'vencimiento']);
+
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );

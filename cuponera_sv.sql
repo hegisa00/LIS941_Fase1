@@ -260,9 +260,9 @@ CREATE TABLE `ofertas` (
 --
 
 INSERT INTO `ofertas` (`id`, `empresa_id`, `titulo`, `precio_regular`, `precio_oferta`, `fecha_inicio`, `fecha_fin`, `fecha_limite_canje`, `cantidad_cupones`, `descripcion`, `estado`, `created_at`, `updated_at`) VALUES
-(1, 1, '6 pupusas revueltas + 2 bebidas', 8.00, 4.99, '2026-10-23', '2026-11-14', '2026-12-04', 100, 'Seis pupusas a elegir (revueltas, queso con loroco o frijol con queso) y dos bebidas.', 'disponible', '2026-10-25 09:51:15', '2026-10-25 09:51:15'),
-(2, 1, 'Desayuno típico para 2 personas', 12.50, 7.25, '2026-10-24', '2026-11-09', '2026-11-24', NULL, 'Huevos, frijoles, plátano frito, crema, queso y café para dos personas.', 'disponible', '2026-10-25 09:51:15', '2026-10-25 09:51:15'),
-(3, 1, 'Oferta oculta (no disponible)', 5.00, 3.00, '2026-10-24', '2026-11-04', '2026-11-14', 10, 'Esta oferta no debe aparecer en la portada porque su estado es no disponible.', 'no_disponible', '2026-10-25 09:51:15', '2026-10-25 09:51:15');
+(1, 1, '6 pupusas revueltas + 2 bebidas', 8.00, 4.99, CURDATE() - INTERVAL 2 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE() + INTERVAL 60 DAY, 100, 'Seis pupusas a elegir (revueltas, queso con loroco o frijol con queso) y dos bebidas.', 'disponible', '2026-10-25 09:51:15', '2026-10-25 09:51:15'),
+(2, 1, 'Desayuno típico para 2 personas', 12.50, 7.25, CURDATE() - INTERVAL 2 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE() + INTERVAL 60 DAY, NULL, 'Huevos, frijoles, plátano frito, crema, queso y café para dos personas.', 'disponible', '2026-10-25 09:51:15', '2026-10-25 09:51:15'),
+(3, 1, 'Oferta oculta (no disponible)', 5.00, 3.00, CURDATE() - INTERVAL 2 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE() + INTERVAL 60 DAY, 10, 'Esta oferta no debe aparecer en la portada porque su estado es no disponible.', 'no_disponible', '2026-10-25 09:51:15', '2026-10-25 09:51:15');
 
 -- --------------------------------------------------------
 

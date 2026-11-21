@@ -33,12 +33,40 @@
         </div>
     </div>
 
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <a href="{{ route('admin.reportes') }}" class="panel p-3 d-block text-decoration-none h-100">
+                <div class="cifra">{{ number_format($cuponesVendidos) }}</div>
+                <div class="small text-secondary mt-1">Cupones vendidos</div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ route('admin.reportes') }}" class="panel p-3 d-block text-decoration-none h-100">
+                <div class="cifra">${{ number_format($totalVentas, 2) }}</div>
+                <div class="small text-secondary mt-1">Ventas totales</div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ route('admin.reportes') }}" class="panel p-3 d-block text-decoration-none h-100">
+                <div class="cifra" style="color: var(--primario)">${{ number_format($gananciaTotal, 2) }}</div>
+                <div class="small text-secondary mt-1">Ganancia por comisiones</div>
+            </a>
+        </div>
+    </div>
+
+    @if($pendientes > 0)
+        <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+            <span>Tienes <strong>{{ $pendientes }}</strong> {{ $pendientes === 1 ? 'solicitud de empresa pendiente' : 'solicitudes de empresas pendientes' }} de revisar.</span>
+            <a href="{{ route('admin.empresas.index', ['estado' => 'pendiente']) }}" class="btn btn-sm btn-primary">Revisar</a>
+        </div>
+    @endif
+
     <div class="panel p-4">
         <h2 class="h5 fw-bold">Accesos rápidos</h2>
         <div class="d-flex flex-wrap gap-2">
             <a href="{{ route('admin.empresas.index') }}" class="btn btn-primary">Revisar solicitudes de empresas</a>
+            <a href="{{ route('admin.reportes') }}" class="btn btn-cupon">Ver reportes de ventas y ganancias</a>
             <a href="{{ route('admin.administradores.create') }}" class="btn btn-outline-secondary">Registrar administrador</a>
         </div>
-        <p class="small text-secondary mt-3 mb-0">Los reportes de ventas y ganancias se agregarán en la fase final.</p>
     </div>
 @endsection

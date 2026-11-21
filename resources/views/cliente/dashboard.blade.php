@@ -22,8 +22,14 @@
         <div class="col-lg-7">
             <div class="panel p-4 h-100">
                 <h2 class="h5 fw-bold">Mis cupones y facturas</h2>
-                <p class="text-secondary mb-3">Aún no has comprado cupones. Cuando lo hagas, aquí verás tu historial y tus facturas.</p>
-                <a href="{{ route('home') }}" class="btn btn-cupon">Ver cupones disponibles</a>
+                @if($totalCompras > 0)
+                    <p class="mb-3">Has realizado <strong>{{ $totalCompras }}</strong> compra(s) y tienes <strong>{{ $totalCupones }}</strong> cupón(es).</p>
+                    <a href="{{ route('compras.index') }}" class="btn btn-primary">Ver historial y facturas</a>
+                    <a href="{{ route('home') }}" class="btn btn-cupon">Seguir comprando</a>
+                @else
+                    <p class="text-secondary mb-3">Aún no has comprado cupones. Cuando lo hagas, aquí verás tu historial y tus facturas.</p>
+                    <a href="{{ route('home') }}" class="btn btn-cupon">Ver cupones disponibles</a>
+                @endif
             </div>
         </div>
     </div>

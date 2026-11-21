@@ -3,7 +3,11 @@
 use App\Http\Controllers\Admin\AdministradorController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EmpresaController as AdminEmpresaController;
+use App\Http\Controllers\Admin\ReporteController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Cliente\CompraController;
+use App\Http\Controllers\Empresa\OfertaController;
+use App\Http\Middleware\EmpresaAprobada;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterClienteController;
 use App\Http\Controllers\Auth\RegisterEmpresaController;
@@ -69,8 +73,37 @@ Route::get('/cliente', ClienteDashboardController::class)
 Route::get('/empresa', EmpresaDashboardController::class)
     ->middleware(RoleMiddleware::class.':empresa')->name('empresa.dashboard');
 
+/*
+|--------------------------------------------------------------------------
+| Empresa aprobada: publicación y edición de ofertas
+|--------------------------------------------------------------------------
+*/
+Route::middleware([RoleMiddleware::class.':empresa', EmpresaAprobada::class])
+    ->prefix('empresa/ofertas')->name('empresa.ofertas.')->group(function () {
+        Route::get('/', [OfertaController::class, 'index'])->name('index');
+        Route::get('/crear', [OfertaController::class, 'create'])->name('create');
+        Route::post('/', [OfertaController::class, 'store'])->name('store');
+        Route::get('/{oferta}/editar', [OfertaController::class, 'edit'])->whereNumber('oferta')->name('edit');
+        Route::put('/{oferta}', [OfertaController::class, 'update'])->whereNumber('oferta')->name('update');
+    });
+
+/*
+|--------------------------------------------------------------------------
+| Cliente: compra de cupones, historial y facturas
+|--------------------------------------------------------------------------
+*/
+Route::middleware(RoleMiddleware::class.':cliente')->group(function () {
+    Route::get('/mis-cupones', [CompraController::class, 'index'])->name('compras.index');
+    Route::get('/cupones/{oferta}/comprar', [CompraController::class, 'create'])->whereNumber('oferta')->name('compras.create');
+    Route::post('/cupones/{oferta}/comprar', [CompraController::class, 'store'])->whereNumber('oferta')
+        ->middleware('throttle:20,1')->name('compras.store');
+    Route::get('/facturas/{compra}', [CompraController::class, 'factura'])->whereNumber('compra')->name('compras.factura');
+});
+
 Route::middleware(RoleMiddleware::class.':admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', AdminDashboardController::class)->name('dashboard');
+
+    Route::get('/reportes', ReporteController::class)->name('reportes');
 
     Route::get('/empresas', [AdminEmpresaController::class, 'index'])->name('empresas.index');
     Route::post('/empresas/{empresa}/aprobar', [AdminEmpresaController::class, 'aprobar'])->name('empresas.aprobar');

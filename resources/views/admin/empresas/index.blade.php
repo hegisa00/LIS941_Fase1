@@ -18,7 +18,7 @@
     <ul class="nav nav-pills mb-4 gap-1">
         @foreach($pestanas as $clave => $texto)
             <li class="nav-item">
-                <a class="nav-link {{ $estado === $clave ? 'active bg-success' : 'text-body' }}"
+                <a class="nav-link {{ $estado === $clave ? 'active pestana-activa' : 'text-body' }}"
                    href="{{ route('admin.empresas.index', ['estado' => $clave]) }}">
                     {{ $texto }}
                     <span class="badge text-bg-light">{{ $clave === 'todas' ? $conteos->sum() : ($conteos[$clave] ?? 0) }}</span>

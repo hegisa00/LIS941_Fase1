@@ -87,6 +87,20 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        // Una compra de ejemplo para que los reportes y el historial tengan datos.
+        $oferta = $empresa->ofertas()->where('estado', 'disponible')->orderBy('id')->first();
+        $compra = $cliente->cliente->compras()->create([
+            'oferta_id' => $oferta->id,
+            'numero_factura' => 'FAC-'.now()->format('Ymd').'-DEMO1',
+            'cantidad' => 2,
+            'precio_unitario' => $oferta->precio_oferta,
+            'total' => $oferta->precio_oferta * 2,
+            'tarjeta_ultimos4' => '4242',
+        ]);
+        foreach (['CUP-DEMO1-00001', 'CUP-DEMO1-00002'] as $codigo) {
+            $compra->cupones()->create(['codigo' => $codigo]);
+        }
+
         // Empresa pendiente: sirve para probar la aprobación desde el panel de administración.
         $pendiente = User::create([
             'usuario' => 'tecnoplaza',

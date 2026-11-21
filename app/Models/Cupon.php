@@ -22,4 +22,23 @@ class Cupon extends Model
     {
         return $this->belongsTo(Compra::class);
     }
+
+    /** Estado real: un cupón disponible cuya fecha límite de canje ya pasó se muestra como vencido. */
+    public function estadoActual(): string
+    {
+        if ($this->estado === 'disponible' && $this->compra->oferta->fecha_limite_canje->lt(today())) {
+            return 'vencido';
+        }
+
+        return $this->estado;
+    }
+
+    public function claseEstado(): string
+    {
+        return match ($this->estadoActual()) {
+            'canjeado' => 'text-bg-secondary',
+            'vencido' => 'text-bg-danger',
+            default => 'text-bg-success',
+        };
+    }
 }
